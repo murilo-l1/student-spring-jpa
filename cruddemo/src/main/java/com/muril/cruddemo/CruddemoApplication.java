@@ -19,10 +19,13 @@ public class CruddemoApplication {
 	@Bean
 	public CommandLineRunner commandLineRunner(StudentDAO studentDAO) {
 		return runner -> {
-			//createStudent(studentDAO);
+			createStudent(studentDAO);
 			readStudent(studentDAO);
 			//queryForStudents(studentDAO);
 			//queryForStudentsByFirstName(studentDAO);
+            //updateStudentName(studentDAO);
+			//deleteStudent(studentDAO);
+			//deleteAll(studentDAO);
 		};
 	}
 
@@ -30,13 +33,11 @@ public class CruddemoApplication {
 	public void createStudent(StudentDAO studentDAO) {
 		//criar DAO do estudante
 		Student myStudent = new Student("Murilo", "Lusvarghi", "murilolusvarghi@outlook.com");
-		System.out.println("Student created: " + myStudent.toString());
+		System.out.println("Student created: " + myStudent);
 
 		//salvar estudante na bd
 		studentDAO.save(myStudent);
 
-		//mostrar id do estudante que foi salvo
-		System.out.println("Student ID: " + myStudent.getId());
 	}
 
 	public void readStudent(StudentDAO studentDAO){
@@ -69,6 +70,29 @@ public class CruddemoApplication {
 		for(Student tempStudent : lastNameList){
 			System.out.println(tempStudent);
 		}
+	}
+
+    public void updateStudentName(StudentDAO studentDAO){
+        // procurar estudante pelo ID
+        Student retrievedStudent = studentDAO.findById(1);
+        System.out.println("Finding student...");
+
+        //colocando o atributo atualizado
+        retrievedStudent.setFirstName("Paulão");
+
+        studentDAO.update(retrievedStudent);
+        System.out.println("Updated student: " + retrievedStudent);
+    }
+
+	public void deleteStudent(StudentDAO studentDAO){
+		int studentId = 2;
+		System.out.println("Deleting student with id " + studentId);
+		studentDAO.deleteStudentById(studentId);
+	}
+
+	public void deleteAll(StudentDAO studentDAO){
+		Integer numsofRowsDeleted = studentDAO.deleteAll();
+		System.out.println("Deleted dataBase with " + numsofRowsDeleted + " rows.");
 	}
 
 }

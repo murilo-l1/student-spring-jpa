@@ -3,6 +3,7 @@ package com.muril.cruddemo.dao;
 import com.muril.cruddemo.entity.Student;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,4 +51,23 @@ public class StudentDAOImpl implements StudentDAO{
         return studentQuery.getResultList();
     }
 
+    @Override
+    @Transactional
+    public void update(Student theStudent) {
+        entityManager.merge(theStudent);
+    }
+
+    @Override
+    @Transactional
+    public void deleteStudentById(Integer studentId) {
+        Student retrievedStudent = findById(studentId);
+        entityManager.remove(retrievedStudent);
+    }
+
+    @Override
+    @Transactional
+    public Integer deleteAll() {
+        return entityManager.createQuery("DELETE FROM Student")
+                     .executeUpdate();
+    }
 }
